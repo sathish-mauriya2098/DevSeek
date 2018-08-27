@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Card,Row,Input,Col,Button} from 'react-materialize';
-
+import axios from 'axios';
 export default class Forms extends Component {
     constructor(){
         super();
@@ -16,7 +16,7 @@ export default class Forms extends Component {
     }
       inputHandler=(event)=>{
         //   alert(event.target.value);
-        const user={...user};
+        const user={...this.state.user};
         var name=event.target.name;
         if(name==="Name")
         user.Name=event.target.value;
@@ -29,8 +29,24 @@ export default class Forms extends Component {
        this.setState({
          user:user
        }
+      
        );
       }
+      inputSubmit=(event)=>{
+          event.preventDefault();
+       const user={
+           name:this.state.user.Name,
+           email:this.state.user.Email,
+           branch:this.state.user.Branch,
+           degree:this.state.user.Degree,
+
+       }
+       console.log(user);
+      axios.get("/data",user)
+      .then(res=>console.log(res))
+      .catch(err=>console.log(err));
+      
+    }
     render() {
  return (
      
@@ -44,14 +60,14 @@ export default class Forms extends Component {
             <p>{this.state.user.Degree}</p>
             <Row>
                 <body>
-                {/* <form method="post" action="/data"> */}
+                <form onSubmit={this.inputSubmit}>
                 <Input  s={12} label="Name" onChange={this.inputHandler} name="Name"/>
                 <Input type="email" label="Email" onChange={this.inputHandler} name="Email" s={12} />
                 <Input s={12} type='select' label="Degree" onChange={this.inputHandler}  name="Degree" defaultValue='2'>
                     <option value='B.E'>B.E</option>
                     <option value='B.Tech'>B.Tech</option>
                </Input>
-               <Input s={12} type='select' label="Branch" onChange={this.inputHandler} name="Branch" defaultValue='2'>
+               <Input s={12} type='select' label="Branch" onChange={this.inputHandler} name="Branch" >
                     <option value='CSE'>CSE</option>
                     <option value='IT'>IT</option>
                     <option value='EEE'>EEE</option>
@@ -93,9 +109,9 @@ export default class Forms extends Component {
                <Input type="url" label="Youtube channel Link" s={12} />
                <Input type="url" label="Personal Blogs/Website Link" s={12} />
                <div className="center">
-               <Button waves='light' type="button" className="blue">register</Button>
+               <Button waves='light' type="submit" className="blue">register</Button>
                </div>
-               {/* </form> */}
+               </form>
                </body>
            </Row>
           </Card>
